@@ -1,0 +1,11 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup>
+    <TargetFramework>net472</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Update="Partidos.aspx.cs">
+      <DependentUpon>Partidos.aspx</DependentUpon>
+    </Compile>
+    <None Include="operaciones_abm.txt" />
+  </ItemGroup>
+</Project>

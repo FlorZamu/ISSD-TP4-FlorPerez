@@ -1,36 +1,46 @@
 using System;
-using System.Data;
-using System.Web.UI.WebControls;
+using System.Collections.Generic;
+using System.IO;
+using System.Web.UI;
 
-namespace ISSD_TP4_FlorPerez
+namespace parcialTP4
 {
-    public partial class Partidos : System.Web.UI.Page
+    public partial class Partidos : Page
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (!IsPostBack) { CargarGrilla(); }
+            if (!IsPostBack)
+            {
+                CargarLista();
+            }
         }
 
-        private void CargarGrilla()
+        protected void btnActualizar_Click(object sender, EventArgs e)
         {
-            DataTable dt = new DataTable();
-            dt.Columns.Add("id"); dt.Columns.Add("Local"); dt.Columns.Add("Visitante");
+            CargarLista();
+            RegistrarAuditoria("Se presionó el botón Cargar Datos");
+        }
 
-            // AQUÍ ESTÁN TUS DATOS CARGADOS[cite: 1, 2]
-            dt.Rows.Add("1", "Moreno FC", "ISSD United");
-            
-            gvPartidos.DataSource = dt;
+        private void CargarLista()
+        {
+            // Datos de prueba para verificar que la grilla funciona
+            List<Partido> lista = new List<Partido>
+            {
+                new Partido { Id = 1, Fecha = DateTime.Now, EquipoLocal = "Moreno FC", EquipoVisitante = "Atlas", Resultado = "2-1" },
+                new Partido { Id = 2, Fecha = DateTime.Now.AddDays(2), EquipoLocal = "Deportivo", EquipoVisitante = "Unión", Resultado = "Pendiente" }
+            };
+
+            gvPartidos.DataSource = lista;
             gvPartidos.DataBind();
         }
 
-        protected void btnCargar_Click(object sender, EventArgs e)
+        private void RegistrarAuditoria(string accion)
         {
-            // Lógica para el formulario que pediste
-            string nombre = txtEquipo.Text;
-            if (!string.IsNullOrEmpty(nombre)) {
-                ClientScript.RegisterStartupScript(this.GetType(), "alert", $"alert('Equipo {nombre} cargado!');", true);
-                txtEquipo.Text = "";
-            }
+            try {
+                string ruta = Server.MapPath("operaciones_abm.txt");
+                string log = $"{DateTime.Now:yyyy-MM-dd HH:mm:ss} - {accion} (Usuario: Flor)\n";
+                File.AppendAllText(ruta, log);
+            } catch { }
         }
     }
 }
