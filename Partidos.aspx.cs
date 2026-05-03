@@ -1,36 +1,35 @@
 using System;
-using System.Configuration;
-using System.Data.SqlClient;
-using System.IO;
-using System.Web.UI;
+using System.Data;
+using System.Web.UI.WebControls;
 
-namespace TP4 {
-    public partial class Partidos : Page {
-        protected void btnGuardar_Click(object sender, EventArgs e) {
-            if (string.IsNullOrWhiteSpace(txtNombreEquipo.Text)) return;
+namespace ISSD_TP4_FlorPerez
+{
+    public partial class Partidos : System.Web.UI.Page
+    {
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            if (!IsPostBack) { CargarGrilla(); }
+        }
 
-            string connString = ConfigurationManager.ConnectionStrings["ConexionDeportes"].ConnectionString;
+        private void CargarGrilla()
+        {
+            DataTable dt = new DataTable();
+            dt.Columns.Add("id"); dt.Columns.Add("Local"); dt.Columns.Add("Visitante");
 
-            using (SqlConnection con = new SqlConnection(connString)) {
-                try {
-                    string sql = "INSERT INTO Equipos (nombre) VALUES (@nombre)";
-                    SqlCommand cmd = new SqlCommand(sql, con);
-                    cmd.Parameters.AddWithValue("@nombre", txtNombreEquipo.Text);
+            // AQUÍ ESTÁN TUS DATOS CARGADOS[cite: 1, 2]
+            dt.Rows.Add("1", "Moreno FC", "ISSD United");
+            
+            gvPartidos.DataSource = dt;
+            gvPartidos.DataBind();
+        }
 
-                    con.Open();
-                    cmd.ExecuteNonQuery();
-
-                    // --- GENERAR LOG (Archivo de texto) ---
-                    string rutaLog = Server.MapPath("~/operaciones_abm.txt");
-                    string registro = $"{DateTime.Now:yyyy-MM-dd HH:mm:ss} - ALTA: {txtNombreEquipo.Text}{Environment.NewLine}";
-                    File.AppendAllText(rutaLog, registro);
-
-                    txtNombreEquipo.Text = "";
-                    Response.Write("<script>alert('Equipo guardado y log actualizado con éxito.');</script>");
-                }
-                catch (Exception ex) {
-                    Response.Write("<script>alert('Error técnico: " + ex.Message + "');</script>");
-                }
+        protected void btnCargar_Click(object sender, EventArgs e)
+        {
+            // Lógica para el formulario que pediste
+            string nombre = txtEquipo.Text;
+            if (!string.IsNullOrEmpty(nombre)) {
+                ClientScript.RegisterStartupScript(this.GetType(), "alert", $"alert('Equipo {nombre} cargado!');", true);
+                txtEquipo.Text = "";
             }
         }
     }
