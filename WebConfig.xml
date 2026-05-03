@@ -1,0 +1,10 @@
+<configuration>
+  <connectionStrings>
+    <add name="ConexionDeportes" 
+         connectionString="Data Source=TU_SERVIDOR;Initial Catalog=ISSD-TP4-202601;Integrated Security=True" 
+         providerName="System.Data.SqlClient" />
+  </connectionStrings>
+  <system.web>
+    <compilation debug="true" targetFramework="4.7.2" />
+  </system.web>
+</configuration>
